@@ -1,6 +1,8 @@
 {
-  "appId": "co.fitcom.zipdemo",
-  "appName": "ZipDemo",
+  "appId": "io.ionic.starter",
+  "appName": "demo",
   "bundledWebRuntime": false,
-  "webDir": "www"
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {}
 }
