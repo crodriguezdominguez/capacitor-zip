@@ -102,7 +102,6 @@ export class HomePage implements OnInit {
 
   async createZip() {
     try {
-      alert(`${this.documentsDirectory}/testZip.zip`);
       await this.zip.zip({
         destination: `${this.documentsDirectory}/testZip.zip`,
         source: `${this.documentsDirectory}/toZip`
@@ -119,18 +118,12 @@ export class HomePage implements OnInit {
 
   async unzip() {
     try {
-      await Filesystem.mkdir({
-        directory: FilesystemDirectory.Documents,
-        path: 'testZip',
-        createIntermediateDirectories: true
-      });
       await this.zip.unZip({
         source: `${this.documentsDirectory}/testZip.zip`,
         destination: `${this.documentsDirectory}/testZip`,
       }, (progress) => {
         this.unzipProgress = progress.value;
       });
- 
       this.firstData = (await Filesystem.readFile({directory: FilesystemDirectory.Documents, path: '/toZip/first.txt'})).data;
       this.secondData = (await Filesystem.readFile({directory: FilesystemDirectory.Documents, path: '/toZip/second.txt'})).data;
 
