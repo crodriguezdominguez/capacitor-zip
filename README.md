@@ -6,7 +6,9 @@
 
 ## Installation
 
-- `npm i capacitor-zip`
+- new version: `npm i git+https://github.com/match08/capacitor-zip.git`
+
+- old version `npm i capacitor-zip`
 
 ## Usage
 
