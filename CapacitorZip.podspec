@@ -6,9 +6,8 @@
     s.license = 'MIT'
     s.homepage = 'https://github.com/match08/capacitor-zip'
     s.author = 'Osei Fortune'
-    s.source = { :git => 'https://github.com/match08/capacitor-zip.git', :tag => s.version.to_s }
+    s.source = { :git => 'https://github.com/match08/capacitor-zip', :tag => s.version.to_s }
     s.source_files = 'ios/Plugin/Plugin/**/*.{swift,h,m,c,cc,mm,cpp}'
-    s.ios.deployment_target  = '10.0'
+    s.ios.deployment_target  = '11.0'
     s.dependency 'Capacitor'
-    s.dependency 'SSZipArchive'
   end
