@@ -6,12 +6,13 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 
-import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
 import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.CompressionLevel;
+import net.lingala.zip4j.model.enums.CompressionMethod;
 import net.lingala.zip4j.progress.ProgressMonitor;
-import net.lingala.zip4j.util.Zip4jConstants;
 
 import java.io.File;
 import java.util.List;
@@ -51,13 +52,11 @@ public class ZipPlugin extends Plugin {
 
         try {
             ZipFile zipFile = new ZipFile(archive);
-            zipFile.setRunInThread(true);
             if (zipFile.isEncrypted() && !password.equals("")) {
-                zipFile.setPassword(password);
+                zipFile.setPassword(password.toCharArray());
             }
 
             File d = new File(destination);
-
             if (!d.exists()) {
                 d.mkdirs();
             }
@@ -72,33 +71,48 @@ public class ZipPlugin extends Plugin {
                 }
             }
             ProgressMonitor monitor = zipFile.getProgressMonitor();
-            int progress;
+            zipFile.setRunInThread(false);
+
             JSObject statusObject = new JSObject();
             zipFile.extractAll(destination);
-            while (monitor.getState() == ProgressMonitor.STATE_BUSY) {
-                progress = monitor.getPercentDone();
-                statusObject.put("status", "progressing");
-                statusObject.put("progress", progress);
-                statusObject.put("completed", false);
-                call.resolve(statusObject);
-            }
 
-            int result = monitor.getResult();
-            switch (result) {
-                case ProgressMonitor.RESULT_SUCCESS:
-                    JSObject object = new JSObject();
-                    object.put("status", "completed");
-                    object.put("completed", true);
-                    object.put("progress", 100);
-                    object.put("path", destination);
-                    call.resolve(object);
-                    break;
-                case ProgressMonitor.RESULT_ERROR:
-                    call.error(monitor.getException().getMessage());
-                    break;
-                case ProgressMonitor.RESULT_CANCELLED:
-                    call.error("Cancelled");
-            }
+            final String destPath = destination;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int progress;
+                    while (!monitor.getState().equals(ProgressMonitor.State.READY)) {
+                        progress = monitor.getPercentDone();
+                        statusObject.put("status", "progressing");
+                        statusObject.put("progress", progress);
+                        statusObject.put("completed", false);
+                        call.resolve(statusObject);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    ProgressMonitor.Result result = monitor.getResult();
+                    if(monitor.getResult().equals(ProgressMonitor.Result.SUCCESS))
+                    {
+                        JSObject object = new JSObject();
+                        object.put("status", "completed");
+                        object.put("completed", true);
+                        object.put("progress", 100);
+                        object.put("path", destPath);
+                        call.resolve(object);
+                    }
+                    else if(monitor.getResult().equals(ProgressMonitor.Result.ERROR))
+                    {
+                        call.error(monitor.getException().getMessage());
+                    }
+                    else if(monitor.getResult().equals(ProgressMonitor.Result.CANCELLED))
+                    {
+                        call.error("Cancelled");
+                    }
+                }
+            }).start();
         } catch (ZipException e) {
             call.error(e.getMessage());
         }
@@ -139,22 +153,22 @@ public class ZipPlugin extends Plugin {
         if (overwrite && dest.exists()) {
             Boolean deleted = dest.delete();
         }
-
         try {
             ZipFile zipFile = new ZipFile(dest);
             zipFile.setRunInThread(true);
             ZipParameters parameters = new ZipParameters();
-            parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-            parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+
+            parameters.setCompressionMethod(CompressionMethod.DEFLATE);
+            parameters.setCompressionLevel(CompressionLevel.NORMAL);
             if (!password.isEmpty()) {
-                zipFile.setPassword(password);
+                zipFile.setPassword(password.toCharArray());
             }
-            zipFile.createZipFileFromFolder(folder, parameters, false, 0);
+            zipFile.addFolder(folder, parameters);
             int progress;
             JSObject statusObject = new JSObject();
             ProgressMonitor monitor = zipFile.getProgressMonitor();
 
-            while (monitor.getState() == ProgressMonitor.STATE_BUSY) {
+            while (monitor.getState() == ProgressMonitor.State.BUSY) {
                 progress = monitor.getPercentDone();
                 statusObject.put("status", "progressing");
                 statusObject.put("progress", progress);
@@ -162,18 +176,20 @@ public class ZipPlugin extends Plugin {
                 call.success(statusObject);
             }
 
-            int result = monitor.getResult();
-            switch (result) {
-                case ProgressMonitor.RESULT_SUCCESS:
-                    JSObject object = new JSObject();
-                    object.put("status", "completed");
-                    call.success(object);
-                    break;
-                case ProgressMonitor.RESULT_ERROR:
-                    call.error(monitor.getException().getMessage());
-                    break;
-                case ProgressMonitor.RESULT_CANCELLED:
-                    call.error("cancelled");
+            ProgressMonitor.Result result = monitor.getResult();
+            if(monitor.getResult().equals(ProgressMonitor.Result.SUCCESS))
+            {
+                JSObject object = new JSObject();
+                object.put("status", "completed");
+                call.success(object);
+            }
+            else if(monitor.getResult().equals(ProgressMonitor.Result.ERROR))
+            {
+                call.error(monitor.getException().getMessage());
+            }
+            else if(monitor.getResult().equals(ProgressMonitor.Result.CANCELLED))
+            {
+                call.error("cancelled");
             }
 
         } catch (ZipException e) {
