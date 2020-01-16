@@ -6,7 +6,7 @@
 
 ## Installation
 
-- new version: `npm i git+https://github.com/match08/capacitor-zip.git`
+- new version: `npm i git+https://github.com/jedilor/capacitor-zip.git`
 
 - old version `npm i capacitor-zip`
 
@@ -29,4 +29,3 @@ await zip.unZip({
     overwrite: true, // Optional default true
     password: 'password', // Optional
 },(progress)=>{});
-
