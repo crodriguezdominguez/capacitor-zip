@@ -1,4 +1,4 @@
-import { WebPlugin } from '@capacitor/core';
+import { WebPlugin, registerWebPlugin } from '@capacitor/core';
 export class ZipPluginWeb extends WebPlugin {
     constructor() {
         super({
@@ -17,4 +17,5 @@ export class ZipPluginWeb extends WebPlugin {
 }
 const ZipPlugin = new ZipPluginWeb();
 export { ZipPlugin };
+registerWebPlugin(ZipPlugin);
 //# sourceMappingURL=web.js.map

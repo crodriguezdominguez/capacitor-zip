@@ -1,13 +1,13 @@
-declare global {
+declare module "@capacitor/core" {
     interface PluginRegistry {
-        ZipPlugin?: IZip;
+        ZipPlugin: IZip;
     }
 }
 
 export interface IZip {
-    zip(options: ZipOptions, progress?: Function): void;
+    zip(options: ZipOptions, progress?: Function): Promise<any>;
 
-    unZip(options: UnZipOptions, progress?: Function): void;
+    unZip(options: UnZipOptions, progress?: Function): Promise<any>;
 }
 
 export interface ZipOptions {

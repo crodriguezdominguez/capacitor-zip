@@ -1,4 +1,4 @@
-import { WebPlugin } from '@capacitor/core';
+import { WebPlugin, registerWebPlugin } from '@capacitor/core';
 import { IZip, ZipOptions, UnZipOptions } from './definitions';
 
 export class ZipPluginWeb extends WebPlugin implements IZip {
@@ -22,3 +22,4 @@ export class ZipPluginWeb extends WebPlugin implements IZip {
 const ZipPlugin = new ZipPluginWeb();
 
 export { ZipPlugin };
+registerWebPlugin(ZipPlugin);
