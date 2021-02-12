@@ -4,8 +4,8 @@ declare module "@capacitor/core" {
     }
 }
 export interface IZip {
-    zip(options: ZipOptions, progress?: Function): Promise<any>;
-    unZip(options: UnZipOptions, progress?: Function): Promise<any>;
+    zip(options: ZipOptions, progress?: Function): Promise<ZipResult>;
+    unZip(options: UnZipOptions, progress?: Function): Promise<UnzipResult>;
 }
 export interface ZipOptions {
     source: string;
@@ -18,4 +18,13 @@ export interface UnZipOptions {
     destination: string;
     overwrite?: boolean;
     password?: string;
+}
+export interface ZipResult {
+    path: string;
+}
+export interface ZipProgressInfo {
+    value: number;
+}
+export interface UnzipResult {
+    path: string;
 }

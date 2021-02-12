@@ -14,7 +14,7 @@ export class Zip {
                     }
                     else {
                         resolve({
-                            value: data.path
+                            path: data.path
                         });
                     }
                 }
@@ -37,7 +37,7 @@ export class Zip {
                     }
                     else {
                         resolve({
-                            value: data.path
+                            path: data.path
                         });
                     }
                 }

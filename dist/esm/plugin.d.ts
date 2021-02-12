@@ -1,5 +1,5 @@
-import { IZip, UnZipOptions, ZipOptions } from './definitions';
+import { IZip, UnZipOptions, ZipOptions, UnzipResult, ZipResult, ZipProgressInfo } from './definitions';
 export declare class Zip implements IZip {
-    zip(options: ZipOptions, progress?: Function): Promise<any>;
-    unZip(options: UnZipOptions, progress?: Function): Promise<any>;
+    zip(options: ZipOptions, progress?: (progress: ZipProgressInfo) => void): Promise<ZipResult>;
+    unZip(options: UnZipOptions, progress?: (progress: ZipProgressInfo) => void): Promise<UnzipResult>;
 }

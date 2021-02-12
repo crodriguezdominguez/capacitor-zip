@@ -1,5 +1,5 @@
 import { WebPlugin, registerWebPlugin } from '@capacitor/core';
-import { IZip, ZipOptions, UnZipOptions } from './definitions';
+import { IZip, ZipOptions, UnZipOptions, ZipResult, UnzipResult } from './definitions';
 
 export class ZipPluginWeb extends WebPlugin implements IZip {
   constructor() {
@@ -9,13 +9,13 @@ export class ZipPluginWeb extends WebPlugin implements IZip {
     });
   }
 
-  zip(options: ZipOptions): Promise<any> {
+  zip(options: ZipOptions): Promise<ZipResult> {
     console.log(options);
-    return Promise.resolve({});
+    return Promise.resolve({path: options.destination});
   }
-  unZip(options: UnZipOptions): Promise<any> {
+  unZip(options: UnZipOptions): Promise<UnzipResult> {
     console.log(options);
-    return Promise.resolve({});
+    return Promise.resolve({path: options.destination});
   }
 }
 

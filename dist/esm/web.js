@@ -8,11 +8,11 @@ export class ZipPluginWeb extends WebPlugin {
     }
     zip(options) {
         console.log(options);
-        return Promise.resolve({});
+        return Promise.resolve({ path: options.destination });
     }
     unZip(options) {
         console.log(options);
-        return Promise.resolve({});
+        return Promise.resolve({ path: options.destination });
     }
 }
 const ZipPlugin = new ZipPluginWeb();
