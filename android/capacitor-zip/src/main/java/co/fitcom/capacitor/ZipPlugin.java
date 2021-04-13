@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.List;
 
 
-@NativePlugin()
+@CapacitorPlugin()
 public class ZipPlugin extends Plugin {
 
     @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
@@ -105,16 +105,16 @@ public class ZipPlugin extends Plugin {
                     }
                     else if(monitor.getResult().equals(ProgressMonitor.Result.ERROR))
                     {
-                        call.error(monitor.getException().getMessage());
+                        call.reject(monitor.getException().getMessage());
                     }
                     else if(monitor.getResult().equals(ProgressMonitor.Result.CANCELLED))
                     {
-                        call.error("Cancelled");
+                        call.reject("Cancelled");
                     }
                 }
             }).start();
         } catch (ZipException e) {
-            call.error(e.getMessage());
+            call.reject(e.getMessage());
         }
 
     }
@@ -173,7 +173,7 @@ public class ZipPlugin extends Plugin {
                 statusObject.put("status", "progressing");
                 statusObject.put("progress", progress);
                 statusObject.put("completed", false);
-                call.success(statusObject);
+                call.resolve(statusObject);
             }
 
             ProgressMonitor.Result result = monitor.getResult();
@@ -181,7 +181,7 @@ public class ZipPlugin extends Plugin {
             {
                 JSObject object = new JSObject();
                 object.put("status", "completed");
-                call.success(object);
+                call.resolve(object);
             }
             else if(monitor.getResult().equals(ProgressMonitor.Result.ERROR))
             {
