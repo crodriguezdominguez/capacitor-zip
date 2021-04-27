@@ -5,5 +5,3 @@ export declare class ZipPluginWeb extends WebPlugin implements IZip {
     zip(options: ZipOptions): Promise<ZipResult>;
     unZip(options: UnZipOptions): Promise<UnzipResult>;
 }
-declare const ZipPlugin: ZipPluginWeb;
-export { ZipPlugin };

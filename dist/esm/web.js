@@ -1,4 +1,4 @@
-import { WebPlugin, registerWebPlugin } from '@capacitor/core';
+import { WebPlugin } from '@capacitor/core';
 export class ZipPluginWeb extends WebPlugin {
     constructor() {
         super({
@@ -15,7 +15,4 @@ export class ZipPluginWeb extends WebPlugin {
         return Promise.resolve({ path: options.destination });
     }
 }
-const ZipPlugin = new ZipPluginWeb();
-export { ZipPlugin };
-registerWebPlugin(ZipPlugin);
 //# sourceMappingURL=web.js.map

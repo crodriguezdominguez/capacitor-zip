@@ -1,3 +1,4 @@
+import { IZip } from './definitions';
+declare const ZipPlugin: IZip;
 export * from './definitions';
-export * from './web';
-export * from './plugin';
+export { ZipPlugin };

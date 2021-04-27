@@ -1,4 +1,4 @@
-import type { IZip } from './definitions';
+import { IZip } from './definitions';
 import { registerPlugin } from '@capacitor/core';
 
 const ZipPlugin = registerPlugin<IZip>('ZipPlugin', {
