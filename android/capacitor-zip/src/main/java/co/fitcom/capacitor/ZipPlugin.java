@@ -119,7 +119,8 @@ public class ZipPlugin extends Plugin {
 
     }
 
-    @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
+//    @PluginMethod(returnType = PluginMethod.RETURN_CALLBACK)
+    @PluginMethod()
     public void zip(PluginCall call) {
         String source = call.getString("source", "");
         String destination = call.getString("destination", "");
@@ -168,12 +169,13 @@ public class ZipPlugin extends Plugin {
             JSObject statusObject = new JSObject();
             ProgressMonitor monitor = zipFile.getProgressMonitor();
 
+//            call.setKeepAlive(true);
             while (monitor.getState() == ProgressMonitor.State.BUSY) {
                 progress = monitor.getPercentDone();
                 statusObject.put("status", "progressing");
                 statusObject.put("progress", progress);
                 statusObject.put("completed", false);
-                call.resolve(statusObject);
+//                call.resolve(statusObject);
             }
 
             ProgressMonitor.Result result = monitor.getResult();
@@ -181,19 +183,21 @@ public class ZipPlugin extends Plugin {
             {
                 JSObject object = new JSObject();
                 object.put("status", "completed");
+                object.put("completed", true);
                 call.resolve(object);
+                call.release(this.getBridge());
             }
             else if(monitor.getResult().equals(ProgressMonitor.Result.ERROR))
             {
-                call.error(monitor.getException().getMessage());
+                call.reject(monitor.getException().getMessage());
             }
             else if(monitor.getResult().equals(ProgressMonitor.Result.CANCELLED))
             {
-                call.error("cancelled");
+                call.reject("cancelled");
             }
 
         } catch (ZipException e) {
-            call.error(e.getMessage());
+            call.reject(e.getMessage());
         }
 
     }
