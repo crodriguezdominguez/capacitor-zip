@@ -1,8 +1,3 @@
-declare module "@capacitor/core" {
-    interface PluginRegistry {
-        ZipPlugin: IZip;
-    }
-}
 export interface IZip {
     zip(options: ZipOptions, progress?: Function): Promise<ZipResult>;
     unZip(options: UnZipOptions, progress?: Function): Promise<UnzipResult>;
